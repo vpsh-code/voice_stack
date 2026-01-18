@@ -9,6 +9,7 @@
 #   "mlx-audio",
 #   "numpy<2",
 #   "httpx",
+#   "pip"
 # ]
 # ///
 
@@ -42,58 +43,50 @@ from wyoming.tts import (
 )
 
 # ==============================================================================
-# LOGGING (easy on the eye)
+# LOGGING CONFIGURATION
 # ==============================================================================
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 _LOGGER = logging.getLogger("mlx_stack")
 
-for noisy in ("httpcore", "httpx", "mlx_audio", "mlx_whisper", "wyoming.server"):
+# Silence noisy libraries to keep the UI clean
+for noisy in ("httpcore", "httpx", "mlx_audio", "mlx_whisper", "wyoming.server", "watchdog"):
     logging.getLogger(noisy).setLevel(logging.WARNING)
 
 # ==============================================================================
-# CONFIG
+# CONFIGURATION
 # ==============================================================================
 
+# Models
 WHISPER_MODEL_ID = "mlx-community/whisper-turbo"
 KOKORO_MODEL_ID = "mlx-community/Kokoro-82M-bf16"
 
 LLM_REPO = "bartowski/Qwen2.5-7B-Instruct-GGUF"
 LLM_FILE = "Qwen2.5-7B-Instruct-Q4_K_M.gguf"
+
+# Network
 LLM_HOST = "0.0.0.0"
 LLM_PORT = 8033
-
 STT_BIND = "tcp://0.0.0.0:10900"
 TTS_BIND = "tcp://0.0.0.0:10800"
 TTS_RATE = 24000
 
-# Ensure MAX context window (matches model context_length=32768)
+# Performance / Context
 LLM_CTX = int(os.environ.get("LLM_CTX", "32768"))
-
-# Prompt cache: keep enabled by default (helps HA responsiveness). Set 0 to disable.
 LLM_CACHE_RAM = os.environ.get("LLM_CACHE_RAM", "4096").strip()
 
-# Try fast-start flags; if unsupported, auto-fallback
-LLM_FLAG_SETS = [
-    ["--no-warmup"],
-    [],
-]
+# TTS Behavior
+KOKORO_PREWARM = os.environ.get("KOKORO_PREWARM", "bg").strip().lower()
+KOKORO_LANG = os.environ.get("KOKORO_LANG", "en").strip().lower()
 
-# Logging controls
+# Logging
 PASSTHRU_LLM_LOGS = os.environ.get("LLM_LOG_PASSTHRU", "").strip() == "1"
 LLM_LOG_FILE = os.environ.get(
     "LLM_LOG_FILE",
     f"/tmp/llama-server-{time.strftime('%Y%m%d-%H%M%S')}.log",
 )
 
-# TTS warmup behavior:
-# - "0" => do not warm (fast startup)
-# - "bg" => warm in background (recommended, no startup regression)
-# - "1" => warm synchronously (slow startup, best first-turn)
-KOKORO_PREWARM = os.environ.get("KOKORO_PREWARM", "bg").strip().lower()
-
-# Kokoro language pinning (prevents accidental pipeline creation for nonsense lang like "a")
-KOKORO_LANG = os.environ.get("KOKORO_LANG", "en").strip().lower()
+LLM_FLAG_SETS = [["--no-warmup"], []]
 
 KOKORO_MODEL = None
 
@@ -115,7 +108,7 @@ KOKORO_VOICES = [
 ]
 
 # ==============================================================================
-# TELEMETRY
+# UI & TELEMETRY
 # ==============================================================================
 
 @dataclass
@@ -126,7 +119,6 @@ class StackTelemetry:
     tts_ready_at: Optional[float] = None
     wyoming_serving_at: Optional[float] = None
 
-    # Latency markers (first-ever in-process; per-turn requires task-scoped state)
     first_token_at: Optional[float] = None
     first_voice_at: Optional[float] = None
 
@@ -140,44 +132,48 @@ class StackTelemetry:
         return f"{(t - self.t0):.2f}s"
 
     def banner(self):
+        print("\033[2J\033[H", end="")  # Clear screen (optional, remove if not desired)
+        _LOGGER.info("╭──────────────────────────────────────────────────────────╮")
+        _LOGGER.info("│                   🚀 MLX AI Stack                        │")
+        _LOGGER.info("│       Local Speech-to-Speech Pipeline on Apple Silicon   │")
+        _LOGGER.info("╰──────────────────────────────────────────────────────────╯")
         _LOGGER.info("")
-        _LOGGER.info("──────────── Stack Telemetry ────────────")
-        _LOGGER.info("Shows: FULL stack ready time, per-response timings, context size, and context shift")
-        _LOGGER.info("Legend:")
-        _LOGGER.info("  ctx   = prompt tokens used / window (n_ctx)")
-        _LOGGER.info("  shift = window slides; oldest tokens are dropped to fit new prompt (log: memory_seq_rm)")
-        _LOGGER.info("  offload(model) = weights/layers placed on GPU (Metal); separate from context shift")
-        _LOGGER.info("─────────────────────────────────────────")
+        _LOGGER.info(f"📂 LLM Model : {LLM_FILE}")
+        _LOGGER.info(f"🎤 STT Model : {WHISPER_MODEL_ID}")
+        _LOGGER.info(f"🗣️  TTS Model : {KOKORO_MODEL_ID}")
         _LOGGER.info("")
 
     def log_ttft(self):
         if self.first_token_at is not None:
-            _LOGGER.info(f"[LATENCY] TTFT {self._since0(self.first_token_at)}")
+            _LOGGER.info(f"   ⏱️  Time to First Token (TTFT): {self._since0(self.first_token_at)}")
 
     def log_ttfv(self):
         if self.first_voice_at is not None:
-            _LOGGER.info(f"[LATENCY] TTFV {self._since0(self.first_voice_at)}")
+            _LOGGER.info(f"   ⏱️  Time to First Voice (TTFV): {self._since0(self.first_voice_at)}")
 
     def log_full_ready(self):
         if self.llm_ready_at and self.tts_ready_at and self.wyoming_serving_at:
             full = max(self.llm_ready_at, self.tts_ready_at, self.wyoming_serving_at)
-            _LOGGER.info(
-                f"[STACK] FULL ready @ {self._since0(full)} "
-                f"(LLM {self._since0(self.llm_ready_at)}, TTS {self._since0(self.tts_ready_at)}, Wyoming {self._since0(self.wyoming_serving_at)})"
-            )
+            _LOGGER.info("")
+            _LOGGER.info("✨ ──────────────────────────────────────────────────────── ✨")
+            _LOGGER.info(f"   🎉 All Systems Operational @ {self._since0(full)}")
+            _LOGGER.info("   🟢 Ready for requests via Wyoming protocol.")
+            _LOGGER.info("✨ ──────────────────────────────────────────────────────── ✨")
+            _LOGGER.info("")
 
     def log_stt(self, seconds: float, text: str):
         self.stt_count += 1
         preview = text.replace("\n", " ").strip()
-        if len(preview) > 90:
-            preview = preview[:90] + "…"
-        _LOGGER.info(f"[STT #{self.stt_count:>3}] {seconds:.2f}s | \"{preview}\"")
+        if len(preview) > 80:
+            preview = preview[:80] + "…"
+        _LOGGER.info(f"👂 STT #{self.stt_count} | ⏱️  {seconds:.2f}s | 📝 \"{preview}\"")
 
     def log_tts(self, seconds: float, chars: int, audio_ms: Optional[int], voice: str, mode: str):
         self.tts_count += 1
         ams = "-" if audio_ms is None else f"{audio_ms}ms"
+        # Using a speaker emoji for TTS
         _LOGGER.info(
-            f"[TTS #{self.tts_count:>3}] {mode:<6} {seconds:.2f}s | chars {chars:>4} | audio {ams:>7} | voice {voice}"
+            f"🗣️  TTS #{self.tts_count} | ⏱️  {seconds:.2f}s | 🔤 {chars} chars | 🔊 {ams} audio | 👤 {voice}"
         )
 
     def log_llm_summary(
@@ -194,14 +190,17 @@ class StackTelemetry:
     ):
         self.llm_req_count += 1
 
-        ctx_part = "-"
+        # Context calculation
+        ctx_display = "Unknown"
         if n_ctx_slot and task_tokens is not None:
             pct = (task_tokens / n_ctx_slot) * 100.0
-            ctx_part = f"{task_tokens}/{n_ctx_slot} ({pct:>4.1f}%)"
+            # Red warning if high usage, green if low
+            icon = "🟢" if pct < 50 else "🟡" if pct < 80 else "🔴"
+            ctx_display = f"{icon} {task_tokens}/{n_ctx_slot} ({pct:.1f}%)"
 
-        shift_part = "no"
+        shift_alert = ""
         if shifted_from is not None:
-            shift_part = f"yes (drop >= {shifted_from})"
+            shift_alert = f" | ⚠️  Context Shift (Dropped >{shifted_from})"
 
         def fmt_time(ms: Optional[float]) -> str:
             return "-" if ms is None else f"{ms/1000.0:.2f}s"
@@ -209,20 +208,16 @@ class StackTelemetry:
         def fmt_tok(n: Optional[int]) -> str:
             return "-" if n is None else str(n)
 
-        _LOGGER.info(
-            f"[LLM #{self.llm_req_count:>3}] task {task_id:<4} | total {fmt_time(total_ms):>6} "
-            f"| prompt {fmt_tok(prompt_tok):>4} tok {fmt_time(prompt_ms):>6} "
-            f"| gen {fmt_tok(gen_tok):>4} tok {fmt_time(gen_ms):>6} "
-            f"| ctx {ctx_part:<18} | shift {shift_part}"
-        )
-
+        _LOGGER.info(f"🤖 LLM #{self.llm_req_count} | ⏱️  Total: {fmt_time(total_ms)}")
+        _LOGGER.info(f"   ├── 📥 Prompt: {fmt_tok(prompt_tok)} tok in {fmt_time(prompt_ms)}")
+        _LOGGER.info(f"   ├── 📤 Gen   : {fmt_tok(gen_tok)} tok in {fmt_time(gen_ms)}")
+        _LOGGER.info(f"   └── 📊 Context: {ctx_display}{shift_alert}")
+        _LOGGER.info("") # Spacer
 
 TELEM = StackTelemetry()
 
 # ==============================================================================
-# LLM LOG PARSING (from file tail)
-#   - No stdout/stderr pipes -> no backpressure -> prevents HA "error talking to API"
-#   - We tail the log file in a thread -> never blocks the asyncio event loop
+# LLM LOG PARSING
 # ==============================================================================
 
 @dataclass
@@ -250,8 +245,6 @@ class LlamaLogParser:
         self.current_task: Optional[_LlmTaskState] = None
         self.last_shift_boundary: Optional[int] = None
         self._printed_intro = False
-        self._offload_layers: Optional[str] = None
-        self._kv_buf: Optional[str] = None
 
     def feed(self, line: str):
         if PASSTHRU_LLM_LOGS:
@@ -259,19 +252,7 @@ class LlamaLogParser:
             sys.stdout.flush()
 
         if not self._printed_intro:
-            m = re.search(r"offloaded\s+(\d+/\d+)\s+layers to GPU", line)
-            if m:
-                self._offload_layers = m.group(1)
-
-            m = re.search(r"Metal KV buffer size\s+=\s+([0-9.]+\s+MiB)", line)
-            if m:
-                self._kv_buf = m.group(1)
-
-            if (self._offload_layers and self._kv_buf) or ("main: model loaded" in line):
-                _LOGGER.info(f"[LLM] offload(model): {self._offload_layers or '?'} layers on Metal")
-                _LOGGER.info(f"[LLM] context memory: KV cache ~ {self._kv_buf or '?'} (scales with n_ctx={LLM_CTX})")
-                _LOGGER.info("[LLM] shift(context): enabled; if prompt exceeds n_ctx, oldest tokens are dropped (memory_seq_rm)")
-                _LOGGER.info(f"[LLM] logs: {LLM_LOG_FILE}")
+            if "main: model loaded" in line:
                 self._printed_intro = True
 
         m = self.RE_SEQ_RM.search(line)
@@ -306,12 +287,9 @@ class LlamaLogParser:
         if m:
             self.current_task.gen_ms = float(m.group(1))
             self.current_task.gen_tok = int(m.group(2))
-
-            # First token observed (global, in-process)
             if TELEM.first_token_at is None:
                 TELEM.first_token_at = time.time()
                 TELEM.log_ttft()
-
             return
 
         m = self.RE_TOTAL.search(line)
@@ -336,7 +314,6 @@ def _tail_file_in_thread(path: str, parser: LlamaLogParser, stop_evt: threading.
             if os.path.exists(path):
                 break
             time.sleep(0.05)
-
         try:
             with open(path, "r", encoding="utf-8", errors="replace") as f:
                 while not stop_evt.is_set():
@@ -347,13 +324,12 @@ def _tail_file_in_thread(path: str, parser: LlamaLogParser, stop_evt: threading.
                     time.sleep(0.05)
         except Exception:
             pass
-
     t = threading.Thread(target=run, name="llm-log-tail", daemon=True)
     t.start()
     return t
 
 # ==============================================================================
-# LLM STARTUP
+# SERVER STARTUP HELPERS
 # ==============================================================================
 
 async def _llm_is_ready(client: httpx.AsyncClient) -> bool:
@@ -392,37 +368,34 @@ async def start_llama_server_nonblocking(llm_ready_evt: asyncio.Event):
     log_fp = open(LLM_LOG_FILE, "ab", buffering=0)
 
     last_proc = None
+    _LOGGER.info("🧠 LLM: Checking Model & Starting Server...")
+    _LOGGER.info("   (If model is missing, it will be downloaded now. Check logs if it hangs.)")
+
     for flags in LLM_FLAG_SETS:
         cmd = _build_llama_cmd(flags)
-        _LOGGER.info(f"🧠 Starting LLM Server: {LLM_FILE} {' '.join(flags) if flags else ''}".rstrip())
         proc = await asyncio.create_subprocess_exec(*cmd, stdout=log_fp, stderr=log_fp)
-
         await asyncio.sleep(0.8)
         if proc.returncode is None:
             last_proc = proc
             break
-
         last_proc = proc
-        _LOGGER.warning(f"[LLM] exited early (rc={proc.returncode}) using flags: {flags}. Falling back...")
+        _LOGGER.warning(f"⚠️  LLM: Exited early using flags {flags}. Retrying with fallback...")
 
     async def watcher():
         if not last_proc:
-            _LOGGER.error("❌ LLM: failed to spawn llama-server")
+            _LOGGER.error("❌ LLM: Failed to spawn llama-server")
             return False
-
         async with httpx.AsyncClient(base_url=f"http://127.0.0.1:{LLM_PORT}") as client:
             while True:
                 if last_proc.returncode is not None:
-                    _LOGGER.error(f"❌ LLM: process exited (rc={last_proc.returncode})")
+                    _LOGGER.error(f"❌ LLM: Process exited (rc={last_proc.returncode})")
                     return False
-
                 if await _llm_is_ready(client):
                     if TELEM.llm_ready_at is None:
                         TELEM.llm_ready_at = time.time()
                         llm_ready_evt.set()
-                        _LOGGER.info(f"[LLM] ready @ {TELEM._since0(TELEM.llm_ready_at)} (health=200)")
+                        _LOGGER.info(f"✅ LLM: Ready @ {TELEM._since0(TELEM.llm_ready_at)}")
                     return True
-
                 await asyncio.sleep(0.25)
 
     try:
@@ -433,7 +406,7 @@ async def start_llama_server_nonblocking(llm_ready_evt: asyncio.Event):
     return last_proc, asyncio.create_task(watcher()), stop_evt
 
 # ==============================================================================
-# STT / TTS
+# STT / TTS HANDLERS
 # ==============================================================================
 
 def _clean_tts_text(text: str) -> str:
@@ -446,22 +419,16 @@ def _clean_tts_text(text: str) -> str:
     return t
 
 async def _prewarm_kokoro():
-    """Build Kokoro pipeline and generate a tiny amount of audio.
-    Run this in background by default to avoid startup regressions.
-    """
     global KOKORO_MODEL
     if not KOKORO_MODEL:
         return
     loop = asyncio.get_running_loop()
-
     def _warm():
         try:
-            # language pinned to prevent accidental pipeline variants
             for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
                 break
         except Exception:
             pass
-
     await loop.run_in_executor(None, _warm)
 
 class STTHandler(AsyncEventHandler):
@@ -490,62 +457,42 @@ class STTHandler(AsyncEventHandler):
             )])
             await self.write_event(info.event())
             return False
-
         if event.type == "transcribe":
             self._armed = True
             self.audio_buffer.clear()
             return True
-
         if event.type == "audio-chunk" and self._armed:
             self.audio_buffer.extend(AudioChunk.from_event(event).audio)
             return True
-
         if event.type == "audio-stop":
             audio = (np.frombuffer(bytes(self.audio_buffer), dtype=np.int16).astype(np.float32) / 32768.0)
             loop = asyncio.get_running_loop()
-
             t0 = time.time()
             r = await loop.run_in_executor(None, lambda: mlx_whisper.transcribe(audio, path_or_hf_repo=WHISPER_MODEL_ID))
             dt = time.time() - t0
-
             text = (r.get("text") or "").strip()
             if text:
                 TELEM.log_stt(seconds=dt, text=text)
-
             await self.write_event(Transcript(text=text).event())
             self._armed = False
             return False
-
         return True
 
-# ------------------------------------------------------------------------------
-# Speech Commit Controller (Pipecat/LiveKit-style)
-#   - Stability window: do not speak while text is still changing
-#   - Minimum chunk: ensure natural prosody (avoid too-short fragments)
-#   - Boundary confidence: punctuation helps, but time+stability can also trigger
-#   - Numeric continuity guard: prevents flushing inside "5,000" / "3.14"
-# ------------------------------------------------------------------------------
-
-_NUMERIC_CONTINUATION_RE = re.compile(r"(\d[,\.\s]?)$")  # minimal guard, not a rulebook
+_NUMERIC_CONTINUATION_RE = re.compile(r"(\d[,\.\s]?)$")
 
 def _ends_like_number_in_progress(s: str) -> bool:
     s = s.rstrip()
     if not s:
         return False
-    # If tail is digit/comma/dot, likely still forming a number token group
-    # (stability gate handles most cases; this prevents comma-triggered early flush)
     return bool(_NUMERIC_CONTINUATION_RE.search(s)) and any(ch.isdigit() for ch in s[-4:])
 
 class SpeechCommitController:
     def __init__(self):
-        # Tunables chosen to improve naturalness without adding audible latency
-        self.min_stable_ms = int(os.environ.get("TTS_STABLE_MS", "140"))          # stability window
-        self.min_words_first = int(os.environ.get("TTS_MIN_WORDS_FIRST", "6"))   # first chunk
-        self.min_words_next = int(os.environ.get("TTS_MIN_WORDS_NEXT", "3"))     # follow chunks
-        self.max_chars_hold = int(os.environ.get("TTS_MAX_CHARS_HOLD", "260"))   # safety release
-        self.min_commit_delay_ms = int(os.environ.get("TTS_MIN_COMMIT_DELAY_MS", "220"))  # delayed commitment
-
-        # internal state
+        self.min_stable_ms = int(os.environ.get("TTS_STABLE_MS", "140"))
+        self.min_words_first = int(os.environ.get("TTS_MIN_WORDS_FIRST", "6"))
+        self.min_words_next = int(os.environ.get("TTS_MIN_WORDS_NEXT", "3"))
+        self.max_chars_hold = int(os.environ.get("TTS_MAX_CHARS_HOLD", "260"))
+        self.min_commit_delay_ms = int(os.environ.get("TTS_MIN_COMMIT_DELAY_MS", "220"))
         self.buffer: List[str] = []
         self.last_change_at = time.time()
         self.start_at = time.time()
@@ -568,39 +515,26 @@ class SpeechCommitController:
     def should_commit(self, audio_started: bool, force: bool) -> bool:
         if not self.buffer:
             return False
-
         text = self.get_text()
         clean = text.strip()
         if not clean:
             return False
-
         if force:
-            # even on force, avoid breaking numbers in the middle if we can
             if _ends_like_number_in_progress(clean):
                 return False
             return True
-
         now = time.time()
         stable_ms = int((now - self.last_change_at) * 1000.0)
-
-        # 1) Stability gate: do not speak while text is still changing
         if stable_ms < self.min_stable_ms:
             return False
-
-        # 2) Delayed commitment: tiny intentional hold to improve prosody
         since_start_ms = int((now - self.start_at) * 1000.0)
         if not audio_started and since_start_ms < self.min_commit_delay_ms:
             return False
-
-        # 3) Avoid committing inside a number token/group
         if _ends_like_number_in_progress(clean):
             return False
-
-        # 4) Minimum chunk size
         words = len(clean.split())
         if not audio_started:
             if words < self.min_words_first:
-                # allow commit if we have a strong boundary anyway
                 if clean.endswith((".", "!", "?", "\n")):
                     return True
                 return False
@@ -609,19 +543,12 @@ class SpeechCommitController:
                 if clean.endswith((".", "!", "?", "\n")):
                     return True
                 return False
-
-        # 5) Boundary confidence
         if clean.endswith((".", "!", "?", "\n")):
             return True
-
-        # Allow comma/semicolon only if chunk is already "speech-sized"
         if clean.endswith((",", ";", ":")) and words >= (self.min_words_first if not audio_started else self.min_words_next) + 2:
             return True
-
-        # 6) Safety release: don't hold too long (keeps responsiveness)
         if len(clean) >= self.max_chars_hold:
             return True
-
         return False
 
     def pop_commit_text(self) -> str:
@@ -637,11 +564,7 @@ class TTSHandler(AsyncEventHandler):
         self._voice_name = "af_sky"
         self._audio_started = False
         self._first_audio_sent = False
-
-        # controller replaces naive punctuation/length flush
         self._commit = SpeechCommitController()
-
-        # streaming audio bridge (thread -> asyncio queue)
         self._pcm_queue: Optional[asyncio.Queue] = None
         self._pcm_worker_task: Optional[asyncio.Task] = None
 
@@ -651,7 +574,6 @@ class TTSHandler(AsyncEventHandler):
             self._audio_started = True
 
     async def _pcm_writer_worker(self, q: asyncio.Queue):
-        """Consumes PCM bytes and emits AudioChunk events."""
         while True:
             item = await q.get()
             if item is None:
@@ -665,61 +587,43 @@ class TTSHandler(AsyncEventHandler):
             await self.write_event(AudioChunk(audio=pcm_data, rate=TTS_RATE, width=2, channels=1).event())
 
     async def _synthesize_text_streaming(self, text: str, voice: str, mode: str):
-        """True streaming: as Kokoro yields frames, we emit AudioChunk with no batching.
-        Implementation keeps the event loop safe by producing audio in a thread and pushing PCM to an asyncio queue.
-        """
         global KOKORO_MODEL
         clean = _clean_tts_text(text)
         if not clean or not KOKORO_MODEL:
             return
-
         await self._ensure_audio_start()
-
         loop = asyncio.get_running_loop()
         q: asyncio.Queue = asyncio.Queue(maxsize=24)
         self._pcm_queue = q
-
         if self._pcm_worker_task is None or self._pcm_worker_task.done():
             self._pcm_worker_task = asyncio.create_task(self._pcm_writer_worker(q))
-
         t0 = time.time()
         total_bytes = 0
-
         def producer():
             nonlocal total_bytes
             try:
-                # language pinned to prevent accidental pipeline variants
                 for chunk in KOKORO_MODEL.generate(clean, voice=voice, lang=KOKORO_LANG):
                     pcm = (np.clip(chunk.audio, -1.0, 1.0) * 32767.0).astype(np.int16).tobytes()
                     total_bytes += len(pcm)
-                    # backpressure via bounded queue; block in producer thread only
                     asyncio.run_coroutine_threadsafe(q.put(pcm), loop).result()
             finally:
                 asyncio.run_coroutine_threadsafe(q.put(None), loop).result()
-
         prod_thread = threading.Thread(target=producer, name="kokoro-producer", daemon=True)
         prod_thread.start()
-
-        # wait for producer completion (thread); audio writer keeps emitting in parallel
         while prod_thread.is_alive():
             await asyncio.sleep(0.02)
-
-        # ensure writer finishes
         if self._pcm_worker_task:
             try:
                 await asyncio.wait_for(self._pcm_worker_task, timeout=5.0)
             except Exception:
                 pass
-
         synth_s = time.time() - t0
-
         audio_ms = None
         try:
             samples = total_bytes // 2
             audio_ms = int((samples / float(TTS_RATE)) * 1000.0)
         except Exception:
             pass
-
         TELEM.log_tts(seconds=synth_s, chars=len(clean), audio_ms=audio_ms, voice=voice, mode=mode)
 
     async def _maybe_commit(self, force: bool = False):
@@ -748,50 +652,39 @@ class TTSHandler(AsyncEventHandler):
                 installed=True,
                 version="1.8.3",
                 voices=wy_voices,
-                supports_synthesize_streaming=True,  # protect streaming
+                supports_synthesize_streaming=True,
             )])
             await self.write_event(info.event())
             return False
-
         if SynthesizeStart.is_type(event.type):
             start = SynthesizeStart.from_event(event)
             self._streaming_active = True
             self._audio_started = False
             self._first_audio_sent = False
-
             self._commit.reset()
             self._voice_name = start.voice.name if (start.voice and start.voice.name) else "af_sky"
             return True
-
         if SynthesizeChunk.is_type(event.type):
             chunk = SynthesizeChunk.from_event(event).text
             self._commit.append(chunk)
             await self._maybe_commit(force=False)
             return True
-
         if SynthesizeStop.is_type(event.type):
-            # best-effort: wait a short moment for stability before forcing flush
             await asyncio.sleep(0.06)
-            # if still ends in a number fragment, give it another breath to stabilize
             if _ends_like_number_in_progress(self._commit.get_text().strip()):
                 await asyncio.sleep(0.08)
-
             await self._maybe_commit(force=True)
-
             if self._audio_started:
                 await self.write_event(AudioStop().event())
             await self.write_event(SynthesizeStopped().event())
             self._streaming_active = False
             return True
-
-        # Legacy non-streaming synthesize path
         if Synthesize.is_type(event.type):
             if self._streaming_active:
                 return True
             synth = Synthesize.from_event(event)
             self._audio_started = False
             self._first_audio_sent = False
-
             await self._synthesize_text_streaming(
                 (synth.text or "").strip(),
                 synth.voice.name if (synth.voice and synth.voice.name) else "af_sky",
@@ -799,7 +692,6 @@ class TTSHandler(AsyncEventHandler):
             )
             await self.write_event(AudioStop().event())
             return False
-
         return True
 
 # ==============================================================================
@@ -811,35 +703,43 @@ async def run_servers() -> None:
 
     TELEM.banner()
 
+    # 1. Start LLM (External Process)
     llm_ready_evt = asyncio.Event()
     tts_ready_evt = asyncio.Event()
-
     llm_proc, llm_watch, llm_tail_stop = await start_llama_server_nonblocking(llm_ready_evt)
 
-    _LOGGER.info("🔊 Loading Kokoro...")
+    # 2. Start TTS (Internal Library)
+    _LOGGER.info("🔊 TTS: Verifying/Downloading Kokoro-82M model...")
+    _LOGGER.info("   (This may take a moment on the first run...)")
     t0 = time.time()
+    # HuggingFace hub might print progress bars to stderr here
     KOKORO_MODEL = load_kokoro(KOKORO_MODEL_ID)
-
     TELEM.tts_ready_at = time.time()
     tts_ready_evt.set()
-    _LOGGER.info(f"[TTS] ready @ {TELEM._since0(TELEM.tts_ready_at)} (load {TELEM.tts_ready_at - t0:.2f}s)")
+    _LOGGER.info(f"✅ TTS: Ready @ {TELEM._since0(TELEM.tts_ready_at)} (load time {TELEM.tts_ready_at - t0:.2f}s)")
 
-    # Warmup strategy (default: background, avoids startup regression)
     if KOKORO_PREWARM in ("1", "true", "yes"):
         await _prewarm_kokoro()
     elif KOKORO_PREWARM in ("bg", "background"):
         asyncio.create_task(_prewarm_kokoro())
-    else:
-        pass
 
+    # 3. Start STT (Internal Library - Lazy Loaded)
+    _LOGGER.info("👂 STT: Whisper model initialized (loads on first use)")
+
+    # 4. Start Servers
     stt_server = AsyncServer.from_uri(STT_BIND)
     tts_server = AsyncServer.from_uri(TTS_BIND)
     TELEM.wyoming_serving_at = time.time()
 
     async def full_ready_announcer():
+        # Wait for both components to report ready
         await llm_ready_evt.wait()
         await tts_ready_evt.wait()
         TELEM.log_full_ready()
+        # Print connection details
+        _LOGGER.info(f"   📡 STT Binding : {STT_BIND}")
+        _LOGGER.info(f"   📡 TTS Binding : {TTS_BIND}")
+        _LOGGER.info(f"   📡 LLM API     : http://{LLM_HOST}:{LLM_PORT}")
 
     asyncio.create_task(full_ready_announcer())
 
@@ -850,19 +750,15 @@ async def run_servers() -> None:
             llm_tail_stop.set()
         except Exception:
             pass
-
         if llm_watch and not llm_watch.done():
             llm_watch.cancel()
             try:
                 await llm_watch
             except Exception:
                 pass
-
         if llm_proc and llm_proc.returncode is None:
             try:
                 llm_proc.send_signal(signal.SIGTERM)
-            except ProcessLookupError:
-                pass
             except Exception:
                 pass
             try:
@@ -874,4 +770,4 @@ if __name__ == "__main__":
     try:
         asyncio.run(run_servers())
     except KeyboardInterrupt:
-        pass
+        _LOGGER.info("\n👋 Shutting down stack...")

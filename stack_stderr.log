@@ -1,0 +1,1497 @@
+Downloading pyarrow (32.6MiB)
+ Downloaded pyarrow
+Installed 177 packages in 2.29s
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 11311.21it/s]
+✅ TTS: Ready @ 52.13s (load time 51.32s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:21:24.340 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 53.20s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 53.20s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 10551.50it/s]
+✅ TTS: Ready @ 13.90s (load time 13.10s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:21:47.031 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 14.15s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 14.15s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 11871.74it/s]
+✅ TTS: Ready @ 5.56s (load time 4.76s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:21:56.070 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 5.77s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 5.77s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 13293.81it/s]
+✅ TTS: Ready @ 8.16s (load time 7.36s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:22:09.215 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.25s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.25s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:255: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 10296.18it/s]
+✅ TTS: Ready @ 8.15s (load time 7.34s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:22:20.256 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.50s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.50s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 10177.60it/s]
+✅ TTS: Ready @ 8.18s (load time 7.37s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:22:31.730 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.41s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.41s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 11593.59it/s]
+✅ TTS: Ready @ 7.96s (load time 7.15s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:22:42.878 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.03s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.03s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 11300.57it/s]
+✅ TTS: Ready @ 6.16s (load time 5.35s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:22:52.360 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 6.44s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 6.44s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 10341.31it/s]
+✅ TTS: Ready @ 8.15s (load time 7.35s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:23:04.980 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.38s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.38s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 13627.70it/s]
+✅ TTS: Ready @ 8.11s (load time 7.31s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:23:16.652 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.18s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.18s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 13521.70it/s]
+✅ TTS: Ready @ 8.24s (load time 7.43s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:23:28.505 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.29s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.29s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 12751.11it/s]
+✅ TTS: Ready @ 8.15s (load time 7.34s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:23:40.739 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.39s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.39s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 13555.00it/s]
+✅ TTS: Ready @ 6.28s (load time 5.48s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:23:50.154 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 6.33s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 6.33s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 14185.92it/s]
+✅ TTS: Ready @ 7.58s (load time 6.77s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:24:02.184 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 7.66s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 7.66s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 11210.43it/s]
+✅ TTS: Ready @ 8.34s (load time 7.53s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:24:13.857 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.43s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.43s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 6340.52it/s]
+✅ TTS: Ready @ 8.81s (load time 8.01s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:24:26.063 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.91s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.91s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 13038.00it/s]
+✅ TTS: Ready @ 8.02s (load time 7.21s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:24:37.497 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.25s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.25s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 9602.13it/s]
+✅ TTS: Ready @ 7.62s (load time 6.81s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:24:48.131 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 7.69s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 7.69s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 10174.08it/s]
+✅ TTS: Ready @ 6.78s (load time 5.97s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:24:58.250 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 6.87s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 6.87s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 13087.08it/s]
+✅ TTS: Ready @ 8.11s (load time 7.31s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:25:11.427 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 8.87s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 8.87s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/bin/python3: No module named pip
+Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<_prewarm_kokoro() done, defined at /Users/VSHYAM/Documents/voice_stack/mlx_stack.py:420> exception=SystemExit(1)>
+Traceback (most recent call last):
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 770, in <module>
+    asyncio.run(run_servers())
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 431, in _prewarm_kokoro
+    await loop.run_in_executor(None, _warm)
+  File "/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/Documents/voice_stack/mlx_stack.py", line 427, in _warm
+    for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 271, in generate
+    pipeline = self._get_pipeline(lang_code)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/kokoro.py", line 255, in _get_pipeline
+    self._pipelines[lang_code] = KokoroPipeline(
+                                 ^^^^^^^^^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/mlx_audio/tts/models/kokoro/pipeline.py", line 100, in __init__
+    self.g2p = en.G2P(
+               ^^^^^^^
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/misaki/en.py", line 501, in __init__
+    spacy.cli.download(name)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 92, in download
+    download_model(filename, pip_args, custom_url)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/cli/download.py", line 180, in download_model
+    run_command(cmd)
+  File "/Users/VSHYAM/.cache/uv/environments-v2/mlx-stack-0fb4ef3c2a6f49be/lib/python3.12/site-packages/spacy/util.py", line 1093, in run_command
+    sys.exit(ret.returncode)
+SystemExit: 1
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 6327.92it/s]
+✅ TTS: Ready @ 11.02s (load time 10.22s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:25:26.038 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 11.10s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 11.10s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+/Users/VSHYAM/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:255: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+Installed 1 package in 62ms
+╭──────────────────────────────────────────────────────────╮
+│                   🚀 MLX AI Stack                        │
+│       Local Speech-to-Speech Pipeline on Apple Silicon   │
+╰──────────────────────────────────────────────────────────╯
+
+📂 LLM Model : Qwen2.5-7B-Instruct-Q4_K_M.gguf
+🎤 STT Model : mlx-community/whisper-turbo
+🗣️  TTS Model : mlx-community/Kokoro-82M-bf16
+
+🧠 LLM: Checking Model & Starting Server...
+   (If model is missing, it will be downloaded now. Check logs if it hangs.)
+🔊 TTS: Verifying/Downloading Kokoro-82M model...
+   (This may take a moment on the first run...)
+Fetching 63 files:   0%|          | 0/63 [00:00<?, ?it/s]Fetching 63 files: 100%|██████████| 63/63 [00:00<00:00, 7146.09it/s]
+✅ TTS: Ready @ 10.01s (load time 9.20s)
+👂 STT: Whisper model initialized (loads on first use)
+2026-01-18 19:25:39.179 | INFO     | mlx_audio.tts.models.kokoro.kokoro:_get_pipeline:254 - Creating new KokoroPipeline for language: a
+✅ LLM: Ready @ 10.09s
+
+✨ ──────────────────────────────────────────────────────── ✨
+   🎉 All Systems Operational @ 10.09s
+   🟢 Ready for requests via Wyoming protocol.
+✨ ──────────────────────────────────────────────────────── ✨
+
+   📡 STT Binding : tcp://0.0.0.0:10900
+   📡 TTS Binding : tcp://0.0.0.0:10800
+   📡 LLM API     : http://0.0.0.0:8033
+Fetching 1 files:   0%|          | 0/1 [00:00<?, ?it/s]Fetching 1 files: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]Fetching 1 files: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2580.32it/s]
+👂 STT #1 | ⏱️  3.29s | 📝 "What is the time?"
+Fetching 1 files:   0%|          | 0/1 [00:00<?, ?it/s]Fetching 1 files: 100%|██████████| 1/1 [00:00<00:00,  1.09it/s]Fetching 1 files: 100%|██████████| 1/1 [00:00<00:00,  1.09it/s]
+words count mismatch on 100.0% of the lines (1/1)
+   ⏱️  Time to First Voice (TTFV): 36.56s
+🗣️  TTS #1 | ⏱️  2.12s | 🔤 7 chars | 🔊 2325ms audio | 👤 af_river
+👂 STT #2 | ⏱️  1.36s | 📝 "What is the news in Bengaluru?"
+👂 STT #3 | ⏱️  1.35s | 📝 "What is the news in Bengaluru?"
+words count mismatch on 100.0% of the lines (1/1)
+words count mismatch on 100.0% of the lines (1/1)
+words count mismatch on 100.0% of the lines (1/1)
+words count mismatch on 100.0% of the lines (1/1)
+words count mismatch on 100.0% of the lines (1/1)
+words count mismatch on 100.0% of the lines (1/1)
+words count mismatch on 100.0% of the lines (1/1)
+words count mismatch on 100.0% of the lines (1/1)
+🗣️  TTS #2 | ⏱️  3.37s | 🔤 646 chars | 🔊 34025ms audio | 👤 af_river
+👂 STT #4 | ⏱️  6.21s | 📝 "What is the current electricity price?"
+words count mismatch on 100.0% of the lines (1/1)
+🗣️  TTS #3 | ⏱️  1.24s | 🔤 60 chars | 🔊 5100ms audio | 👤 af_river

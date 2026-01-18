@@ -1,0 +1,7 @@
+[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[H[2J[HCollecting en-core-web-sm==3.8.0
+  Downloading https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl (12.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 43.8 MB/s  0:00:00
+Installing collected packages: en-core-web-sm
+Successfully installed en-core-web-sm-3.8.0
+[38;5;2m✔ Download and installation successful[0m
+You can now load the package via spacy.load('en_core_web_sm')
