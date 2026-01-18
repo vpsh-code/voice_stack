@@ -21,7 +21,7 @@ import sys
 import time
 import threading
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, List
 
 import httpx
 import mlx_whisper
@@ -71,7 +71,6 @@ TTS_RATE = 24000
 LLM_CTX = int(os.environ.get("LLM_CTX", "32768"))
 
 # Prompt cache: keep enabled by default (helps HA responsiveness). Set 0 to disable.
-# Example: LLM_CACHE_RAM=4096 or 8192. 0 disables.
 LLM_CACHE_RAM = os.environ.get("LLM_CACHE_RAM", "4096").strip()
 
 # Try fast-start flags; if unsupported, auto-fallback
@@ -86,6 +85,15 @@ LLM_LOG_FILE = os.environ.get(
     "LLM_LOG_FILE",
     f"/tmp/llama-server-{time.strftime('%Y%m%d-%H%M%S')}.log",
 )
+
+# TTS warmup behavior:
+# - "0" => do not warm (fast startup)
+# - "bg" => warm in background (recommended, no startup regression)
+# - "1" => warm synchronously (slow startup, best first-turn)
+KOKORO_PREWARM = os.environ.get("KOKORO_PREWARM", "bg").strip().lower()
+
+# Kokoro language pinning (prevents accidental pipeline creation for nonsense lang like "a")
+KOKORO_LANG = os.environ.get("KOKORO_LANG", "en").strip().lower()
 
 KOKORO_MODEL = None
 
@@ -118,6 +126,10 @@ class StackTelemetry:
     tts_ready_at: Optional[float] = None
     wyoming_serving_at: Optional[float] = None
 
+    # Latency markers (first-ever in-process; per-turn requires task-scoped state)
+    first_token_at: Optional[float] = None
+    first_voice_at: Optional[float] = None
+
     stt_count: int = 0
     tts_count: int = 0
     llm_req_count: int = 0
@@ -137,6 +149,14 @@ class StackTelemetry:
         _LOGGER.info("  offload(model) = weights/layers placed on GPU (Metal); separate from context shift")
         _LOGGER.info("─────────────────────────────────────────")
         _LOGGER.info("")
+
+    def log_ttft(self):
+        if self.first_token_at is not None:
+            _LOGGER.info(f"[LATENCY] TTFT {self._since0(self.first_token_at)}")
+
+    def log_ttfv(self):
+        if self.first_voice_at is not None:
+            _LOGGER.info(f"[LATENCY] TTFV {self._since0(self.first_voice_at)}")
 
     def log_full_ready(self):
         if self.llm_ready_at and self.tts_ready_at and self.wyoming_serving_at:
@@ -238,7 +258,6 @@ class LlamaLogParser:
             sys.stdout.write(line + "\n")
             sys.stdout.flush()
 
-        # Print one intuitive “what’s happening” block as soon as we can
         if not self._printed_intro:
             m = re.search(r"offloaded\s+(\d+/\d+)\s+layers to GPU", line)
             if m:
@@ -287,6 +306,12 @@ class LlamaLogParser:
         if m:
             self.current_task.gen_ms = float(m.group(1))
             self.current_task.gen_tok = int(m.group(2))
+
+            # First token observed (global, in-process)
+            if TELEM.first_token_at is None:
+                TELEM.first_token_at = time.time()
+                TELEM.log_ttft()
+
             return
 
         m = self.RE_TOTAL.search(line)
@@ -307,7 +332,6 @@ class LlamaLogParser:
 
 def _tail_file_in_thread(path: str, parser: LlamaLogParser, stop_evt: threading.Event):
     def run():
-        # Wait until file exists
         while not stop_evt.is_set():
             if os.path.exists(path):
                 break
@@ -315,7 +339,6 @@ def _tail_file_in_thread(path: str, parser: LlamaLogParser, stop_evt: threading.
 
         try:
             with open(path, "r", encoding="utf-8", errors="replace") as f:
-                # Start at beginning; you can change to f.seek(0, os.SEEK_END) if desired
                 while not stop_evt.is_set():
                     line = f.readline()
                     if line:
@@ -343,7 +366,7 @@ async def _llm_is_ready(client: httpx.AsyncClient) -> bool:
             pass
     return False
 
-def _build_llama_cmd(extra_flags: list[str]) -> list[str]:
+def _build_llama_cmd(extra_flags: List[str]) -> List[str]:
     cmd = [
         "llama-server",
         "-fa", "on",
@@ -356,7 +379,6 @@ def _build_llama_cmd(extra_flags: list[str]) -> list[str]:
         "--context-shift",
         *extra_flags,
     ]
-    # Prompt cache (enable by default)
     if LLM_CACHE_RAM and LLM_CACHE_RAM != "0":
         cmd += ["--cache-ram", LLM_CACHE_RAM]
     return cmd
@@ -366,7 +388,6 @@ async def start_llama_server_nonblocking(llm_ready_evt: asyncio.Event):
     stop_evt = threading.Event()
     _tail_file_in_thread(LLM_LOG_FILE, parser, stop_evt)
 
-    # Open log file for child output (no stdout/stderr pipes => no backpressure => no HA API errors)
     os.makedirs(os.path.dirname(LLM_LOG_FILE), exist_ok=True)
     log_fp = open(LLM_LOG_FILE, "ab", buffering=0)
 
@@ -404,7 +425,6 @@ async def start_llama_server_nonblocking(llm_ready_evt: asyncio.Event):
 
                 await asyncio.sleep(0.25)
 
-    # Close the file handle in parent; child keeps it open
     try:
         log_fp.close()
     except Exception:
@@ -426,6 +446,9 @@ def _clean_tts_text(text: str) -> str:
     return t
 
 async def _prewarm_kokoro():
+    """Build Kokoro pipeline and generate a tiny amount of audio.
+    Run this in background by default to avoid startup regressions.
+    """
     global KOKORO_MODEL
     if not KOKORO_MODEL:
         return
@@ -433,7 +456,8 @@ async def _prewarm_kokoro():
 
     def _warm():
         try:
-            for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky"):
+            # language pinned to prevent accidental pipeline variants
+            for _ in KOKORO_MODEL.generate("Okay.", voice="af_sky", lang=KOKORO_LANG):
                 break
         except Exception:
             pass
@@ -494,41 +518,203 @@ class STTHandler(AsyncEventHandler):
 
         return True
 
+# ------------------------------------------------------------------------------
+# Speech Commit Controller (Pipecat/LiveKit-style)
+#   - Stability window: do not speak while text is still changing
+#   - Minimum chunk: ensure natural prosody (avoid too-short fragments)
+#   - Boundary confidence: punctuation helps, but time+stability can also trigger
+#   - Numeric continuity guard: prevents flushing inside "5,000" / "3.14"
+# ------------------------------------------------------------------------------
+
+_NUMERIC_CONTINUATION_RE = re.compile(r"(\d[,\.\s]?)$")  # minimal guard, not a rulebook
+
+def _ends_like_number_in_progress(s: str) -> bool:
+    s = s.rstrip()
+    if not s:
+        return False
+    # If tail is digit/comma/dot, likely still forming a number token group
+    # (stability gate handles most cases; this prevents comma-triggered early flush)
+    return bool(_NUMERIC_CONTINUATION_RE.search(s)) and any(ch.isdigit() for ch in s[-4:])
+
+class SpeechCommitController:
+    def __init__(self):
+        # Tunables chosen to improve naturalness without adding audible latency
+        self.min_stable_ms = int(os.environ.get("TTS_STABLE_MS", "140"))          # stability window
+        self.min_words_first = int(os.environ.get("TTS_MIN_WORDS_FIRST", "6"))   # first chunk
+        self.min_words_next = int(os.environ.get("TTS_MIN_WORDS_NEXT", "3"))     # follow chunks
+        self.max_chars_hold = int(os.environ.get("TTS_MAX_CHARS_HOLD", "260"))   # safety release
+        self.min_commit_delay_ms = int(os.environ.get("TTS_MIN_COMMIT_DELAY_MS", "220"))  # delayed commitment
+
+        # internal state
+        self.buffer: List[str] = []
+        self.last_change_at = time.time()
+        self.start_at = time.time()
+
+    def reset(self):
+        self.buffer = []
+        now = time.time()
+        self.last_change_at = now
+        self.start_at = now
+
+    def append(self, text: str):
+        if not text:
+            return
+        self.buffer.append(text)
+        self.last_change_at = time.time()
+
+    def get_text(self) -> str:
+        return "".join(self.buffer)
+
+    def should_commit(self, audio_started: bool, force: bool) -> bool:
+        if not self.buffer:
+            return False
+
+        text = self.get_text()
+        clean = text.strip()
+        if not clean:
+            return False
+
+        if force:
+            # even on force, avoid breaking numbers in the middle if we can
+            if _ends_like_number_in_progress(clean):
+                return False
+            return True
+
+        now = time.time()
+        stable_ms = int((now - self.last_change_at) * 1000.0)
+
+        # 1) Stability gate: do not speak while text is still changing
+        if stable_ms < self.min_stable_ms:
+            return False
+
+        # 2) Delayed commitment: tiny intentional hold to improve prosody
+        since_start_ms = int((now - self.start_at) * 1000.0)
+        if not audio_started and since_start_ms < self.min_commit_delay_ms:
+            return False
+
+        # 3) Avoid committing inside a number token/group
+        if _ends_like_number_in_progress(clean):
+            return False
+
+        # 4) Minimum chunk size
+        words = len(clean.split())
+        if not audio_started:
+            if words < self.min_words_first:
+                # allow commit if we have a strong boundary anyway
+                if clean.endswith((".", "!", "?", "\n")):
+                    return True
+                return False
+        else:
+            if words < self.min_words_next:
+                if clean.endswith((".", "!", "?", "\n")):
+                    return True
+                return False
+
+        # 5) Boundary confidence
+        if clean.endswith((".", "!", "?", "\n")):
+            return True
+
+        # Allow comma/semicolon only if chunk is already "speech-sized"
+        if clean.endswith((",", ";", ":")) and words >= (self.min_words_first if not audio_started else self.min_words_next) + 2:
+            return True
+
+        # 6) Safety release: don't hold too long (keeps responsiveness)
+        if len(clean) >= self.max_chars_hold:
+            return True
+
+        return False
+
+    def pop_commit_text(self) -> str:
+        text = self.get_text()
+        self.buffer = []
+        self.start_at = time.time()
+        return text
+
 class TTSHandler(AsyncEventHandler):
     def __init__(self, reader, writer):
         super().__init__(reader, writer)
         self._streaming_active = False
         self._voice_name = "af_sky"
         self._audio_started = False
-        self._text_buffer = []
+        self._first_audio_sent = False
+
+        # controller replaces naive punctuation/length flush
+        self._commit = SpeechCommitController()
+
+        # streaming audio bridge (thread -> asyncio queue)
+        self._pcm_queue: Optional[asyncio.Queue] = None
+        self._pcm_worker_task: Optional[asyncio.Task] = None
 
     async def _ensure_audio_start(self):
         if not self._audio_started:
             await self.write_event(AudioStart(rate=TTS_RATE, width=2, channels=1).event())
             self._audio_started = True
 
-    async def _synthesize_text(self, text: str, voice: str, mode: str):
+    async def _pcm_writer_worker(self, q: asyncio.Queue):
+        """Consumes PCM bytes and emits AudioChunk events."""
+        while True:
+            item = await q.get()
+            if item is None:
+                return
+            pcm_data = item
+            if not self._first_audio_sent:
+                self._first_audio_sent = True
+                if TELEM.first_voice_at is None:
+                    TELEM.first_voice_at = time.time()
+                    TELEM.log_ttfv()
+            await self.write_event(AudioChunk(audio=pcm_data, rate=TTS_RATE, width=2, channels=1).event())
+
+    async def _synthesize_text_streaming(self, text: str, voice: str, mode: str):
+        """True streaming: as Kokoro yields frames, we emit AudioChunk with no batching.
+        Implementation keeps the event loop safe by producing audio in a thread and pushing PCM to an asyncio queue.
+        """
         global KOKORO_MODEL
         clean = _clean_tts_text(text)
         if not clean or not KOKORO_MODEL:
             return
 
-        loop = asyncio.get_running_loop()
         await self._ensure_audio_start()
 
-        def generate_pcm():
-            out = []
-            for chunk in KOKORO_MODEL.generate(clean, voice=voice):
-                out.append((np.clip(chunk.audio, -1.0, 1.0) * 32767.0).astype(np.int16).tobytes())
-            return out
+        loop = asyncio.get_running_loop()
+        q: asyncio.Queue = asyncio.Queue(maxsize=24)
+        self._pcm_queue = q
+
+        if self._pcm_worker_task is None or self._pcm_worker_task.done():
+            self._pcm_worker_task = asyncio.create_task(self._pcm_writer_worker(q))
 
         t0 = time.time()
-        chunks = await loop.run_in_executor(None, generate_pcm)
+        total_bytes = 0
+
+        def producer():
+            nonlocal total_bytes
+            try:
+                # language pinned to prevent accidental pipeline variants
+                for chunk in KOKORO_MODEL.generate(clean, voice=voice, lang=KOKORO_LANG):
+                    pcm = (np.clip(chunk.audio, -1.0, 1.0) * 32767.0).astype(np.int16).tobytes()
+                    total_bytes += len(pcm)
+                    # backpressure via bounded queue; block in producer thread only
+                    asyncio.run_coroutine_threadsafe(q.put(pcm), loop).result()
+            finally:
+                asyncio.run_coroutine_threadsafe(q.put(None), loop).result()
+
+        prod_thread = threading.Thread(target=producer, name="kokoro-producer", daemon=True)
+        prod_thread.start()
+
+        # wait for producer completion (thread); audio writer keeps emitting in parallel
+        while prod_thread.is_alive():
+            await asyncio.sleep(0.02)
+
+        # ensure writer finishes
+        if self._pcm_worker_task:
+            try:
+                await asyncio.wait_for(self._pcm_worker_task, timeout=5.0)
+            except Exception:
+                pass
+
         synth_s = time.time() - t0
 
         audio_ms = None
         try:
-            total_bytes = sum(len(c) for c in chunks)
             samples = total_bytes // 2
             audio_ms = int((samples / float(TTS_RATE)) * 1000.0)
         except Exception:
@@ -536,32 +722,23 @@ class TTSHandler(AsyncEventHandler):
 
         TELEM.log_tts(seconds=synth_s, chars=len(clean), audio_ms=audio_ms, voice=voice, mode=mode)
 
-        for pcm_data in chunks:
-            await self.write_event(AudioChunk(audio=pcm_data, rate=TTS_RATE, width=2, channels=1).event())
-
-    def _should_flush_buffer(self, force: bool) -> bool:
-        if not self._text_buffer:
-            return False
-        if force:
-            return True
-        text = "".join(self._text_buffer).rstrip()
-        # Logical flush: punctuation or size threshold
-        return len(text) >= 320 or text.endswith((".", "!", "?", "\n"))
-
-    async def _flush_text_buffer(self, force: bool = False):
-        if not self._should_flush_buffer(force):
-            return
-        text = "".join(self._text_buffer)
-        self._text_buffer = []
-        await self._synthesize_text(text, self._voice_name, "stream")
+    async def _maybe_commit(self, force: bool = False):
+        if self._commit.should_commit(audio_started=self._audio_started, force=force):
+            text = self._commit.pop_commit_text()
+            await self._synthesize_text_streaming(text, self._voice_name, "stream")
 
     async def handle_event(self, event: Event) -> bool:
-        global KOKORO_MODEL
-
         if event.type == "describe":
             attribution = Attribution(name="Kokoro TTS", url="https://github.com/hexgrad/Kokoro-82M")
             wy_voices = [
-                TtsVoice(name=v[0], description=v[2], attribution=attribution, installed=True, version="82M", languages=[v[1]])
+                TtsVoice(
+                    name=v[0],
+                    description=v[2],
+                    attribution=attribution,
+                    installed=True,
+                    version="82M",
+                    languages=[v[1]],
+                )
                 for v in KOKORO_VOICES
             ]
             info = Info(tts=[TtsProgram(
@@ -571,37 +748,51 @@ class TTSHandler(AsyncEventHandler):
                 installed=True,
                 version="1.8.3",
                 voices=wy_voices,
-                supports_synthesize_streaming=True,
+                supports_synthesize_streaming=True,  # protect streaming
             )])
             await self.write_event(info.event())
             return False
 
         if SynthesizeStart.is_type(event.type):
             start = SynthesizeStart.from_event(event)
-            self._streaming_active, self._audio_started = True, False
-            self._text_buffer = []
+            self._streaming_active = True
+            self._audio_started = False
+            self._first_audio_sent = False
+
+            self._commit.reset()
             self._voice_name = start.voice.name if (start.voice and start.voice.name) else "af_sky"
             return True
 
         if SynthesizeChunk.is_type(event.type):
-            self._text_buffer.append(SynthesizeChunk.from_event(event).text)
-            await self._flush_text_buffer(force=False)
+            chunk = SynthesizeChunk.from_event(event).text
+            self._commit.append(chunk)
+            await self._maybe_commit(force=False)
             return True
 
         if SynthesizeStop.is_type(event.type):
-            await self._flush_text_buffer(force=True)
+            # best-effort: wait a short moment for stability before forcing flush
+            await asyncio.sleep(0.06)
+            # if still ends in a number fragment, give it another breath to stabilize
+            if _ends_like_number_in_progress(self._commit.get_text().strip()):
+                await asyncio.sleep(0.08)
+
+            await self._maybe_commit(force=True)
+
             if self._audio_started:
                 await self.write_event(AudioStop().event())
             await self.write_event(SynthesizeStopped().event())
             self._streaming_active = False
             return True
 
+        # Legacy non-streaming synthesize path
         if Synthesize.is_type(event.type):
             if self._streaming_active:
                 return True
             synth = Synthesize.from_event(event)
             self._audio_started = False
-            await self._synthesize_text(
+            self._first_audio_sent = False
+
+            await self._synthesize_text_streaming(
                 (synth.text or "").strip(),
                 synth.voice.name if (synth.voice and synth.voice.name) else "af_sky",
                 "legacy",
@@ -628,10 +819,18 @@ async def run_servers() -> None:
     _LOGGER.info("🔊 Loading Kokoro...")
     t0 = time.time()
     KOKORO_MODEL = load_kokoro(KOKORO_MODEL_ID)
-    await _prewarm_kokoro()
+
     TELEM.tts_ready_at = time.time()
     tts_ready_evt.set()
     _LOGGER.info(f"[TTS] ready @ {TELEM._since0(TELEM.tts_ready_at)} (load {TELEM.tts_ready_at - t0:.2f}s)")
+
+    # Warmup strategy (default: background, avoids startup regression)
+    if KOKORO_PREWARM in ("1", "true", "yes"):
+        await _prewarm_kokoro()
+    elif KOKORO_PREWARM in ("bg", "background"):
+        asyncio.create_task(_prewarm_kokoro())
+    else:
+        pass
 
     stt_server = AsyncServer.from_uri(STT_BIND)
     tts_server = AsyncServer.from_uri(TTS_BIND)
@@ -647,7 +846,6 @@ async def run_servers() -> None:
     try:
         await asyncio.gather(stt_server.run(STTHandler), tts_server.run(TTSHandler))
     finally:
-        # stop tail thread
         try:
             llm_tail_stop.set()
         except Exception:
